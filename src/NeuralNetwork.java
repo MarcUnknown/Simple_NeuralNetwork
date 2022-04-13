@@ -1,4 +1,7 @@
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class NeuralNetwork {
     private Matrix weights_input_hidden;
@@ -9,20 +12,18 @@ public class NeuralNetwork {
     public NeuralNetwork(int input_nodes, int hidden_nodes, int output_nodes){
         this.weights_input_hidden = new Matrix(hidden_nodes, input_nodes);
         this.weights_hidden_output = new Matrix(output_nodes, hidden_nodes);
-        this.weights_input_hidden.setElements(setWeightsMatrix(weights_input_hidden));
-        this.weights_hidden_output.setElements(setWeightsMatrix(weights_hidden_output));
+        this.fillMatrixWithWeights(this.weights_input_hidden);
+        this.fillMatrixWithWeights(this.weights_hidden_output);
         this.matrixMath = new MatrixMath();
     }
 
-    private double[][] setWeightsMatrix(Matrix matrix){
+    private void fillMatrixWithWeights(Matrix matrix){
         Random random = new Random();
-        double[][] elements = new double[matrix.getRows()][matrix.getColumns()];
         for (int i = 0; i < matrix.getRows(); i++){
             for (int j = 0; j < matrix.getColumns(); j++){
-                elements[i][j] = random.nextGaussian();
+                matrix.setWeight(i, j, random.nextGaussian());
             }
         }
-        return elements;
     }
 
     public Matrix predict(Matrix inputs){
@@ -51,11 +52,10 @@ public class NeuralNetwork {
 
     private Matrix applySigmoid(Matrix matrix){
         Matrix result = new Matrix(matrix.getRows(), matrix.getColumns());
-        for (int i = 0; i < matrix.getRows(); i++){
-            for (int j = 0; j < matrix.getColumns(); j++){
-                result.getElements()[i][j] = sigmoid(matrix.getElements()[i][j]);
-            }
-        }
+        IntStream.range(0, matrix.getRows())
+                .forEach(rowIndex -> result.setRow(rowIndex, Arrays.stream(matrix.getRow(rowIndex))
+                        .map(this::sigmoid).toArray()));
+
         return result;
     }
 

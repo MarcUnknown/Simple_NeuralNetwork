@@ -1,6 +1,6 @@
 public class Matrix {
     private final int rows, columns;
-    public double[][] elements;
+    private double[][] elements;
 
     public Matrix(int rows, int columns){
         if (rows < 1 || columns < 1)
@@ -22,8 +22,21 @@ public class Matrix {
         return rows;
     }
 
+    public void setRow(int rowIndex, double[] row) {
+        for (int columnIndex = 0; columnIndex < row.length; columnIndex++)
+            elements[rowIndex][columnIndex] = row[columnIndex];
+    }
+
+    public double[] getRow(int index) {
+        return elements[index];
+    }
+
     public int getColumns() {
         return columns;
+    }
+
+    public void setWeight(int row, int column, double weight) {
+        elements[row][column] = weight;
     }
 
     @Override
@@ -38,3 +51,4 @@ public class Matrix {
         return result.toString();
     }
 }
+

@@ -1,5 +1,5 @@
 public class Main {
-    final static int training_size = 10000;
+    final static int training_size = 1000000;
 
     public static void main(String[] args){
         NeuralNetwork neuralNetwork = new NeuralNetwork(2,4,1);
